@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>The Personality Test 🌿</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f4f8; /* Soft pastel background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1E3A8A; /* Deep blue for header */
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .header {
+            background-color: #f0f4f8;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1E3A8A;
+        }
+
+        button {
+            background-color: #3B82F6; /* Blue background */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            width: auto;
+        }
+
+        button:hover {
+            background-color: #2563EB; /* Darker blue */
+        }
+
+        .btn-choice {
+            font-size: 1.1rem;
+            display: block;
+            margin: 10px auto;
+            background-color: #BFDBFE; /* Light blue for choices */
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            width: 80%;
+        }
+
+        .btn-choice:hover {
+            background-color: #93C5FD; /* Slightly darker blue */
+        }
+
+        #quiz-container {
+            display: block;
+            width: 100%;
+        }
+
+        #result {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        #share-btn {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .progress-bar-inner {
+            background-color: #1E3A8A; /* Deep blue */
+            height: 100%;
+            border-radius: 5px;
+            width: 0;
+        }
+
+        #start-over {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #start-btn {
+            font-size: 1.3rem;
+            background-color: #3B82F6; /* Soft blue */
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #start-btn:hover {
+            background-color: #2563EB; /* Darker blue */
+        }
+
+        #quotes {
+            font-size: 1rem;
+            font-style: italic;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .btn-choice {
+                font-size: 1rem;
+                width: 90%;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+
+            #quiz-container {
+                width: 100%;
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>The Personality Test 🌿</h1>
+        <p>Relax and find out more about yourself with this chill personality test. 🌿</p>
+    </div>
+
+    <button id="start-btn" onclick="startQuiz()">Start Quiz</button>
+
+    <div id="quiz-container" style="display: none;">
+        <button id="back-btn" style="display: none;" onclick="goBack()">Back</button>
+        <div id="question-container"></div>
+        <div class="progress-bar">
+            <div id="progress" class="progress-bar-inner"></div>
+        </div>
+    </div>
+
+    <div id="result">
+        <h2>Your Personality Result</h2>
+        <p id="result-text"></p>
+        <button id="share-btn" onclick="shareResult()">Share Your Result</button>
+        <button id="start-over" onclick="startOver()">Start Over</button>
+    </div>
+
+    <div id="quotes">
+        "Take it easy, life’s not a race." - Anonymous
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let totalQuestions = 20;
+        let score = { calm: 0, energetic: 0, introspective: 0, adventurous: 0 };
+
+        const questions = [
+            { text: "How do you prefer to spend your free time?", choices: ["Relaxing at home", "Exploring the outdoors", "Thinking deeply", "Trying new activities"] },
+            { text: "What's your ideal vacation?", choices: ["A peaceful beach", "An action-packed adventure", "A quiet retreat", "A city full of things to discover"] },
+            { text: "How do you handle stressful situations?", choices: ["Stay calm and collected", "Get energized and push through", "Reflect quietly", "Take risks to overcome"] },
+            { text: "How would you describe your personality?", choices: ["Calm", "Energetic", "Introspective", "Adventurous"] },
+            { text: "Do you enjoy being around people?", choices: ["Yes, but I need alone time", "Yes, I thrive in social settings", "I prefer a small group of close friends", "I'm open to meeting new people"] },
+            { text: "How do you react to change?", choices: ["Adapt easily", "Feel excited and energized", "Take time to process it", "Dive in headfirst without thinking"] },
+            { text: "What motivates you?", choices: ["Peace and tranquility", "Action and excitement", "Deep understanding", "New experiences"] },
+            { text: "Which of these words describes you best?", choices: ["Calm", "Energetic", "Thoughtful", "Spontaneous"] },
+            { text: "How do you approach decision-making?", choices: ["With careful thought", "Quick and decisive", "After much contemplation", "Without hesitation"] },
+            { text: "What kind of weather do you enjoy?", choices: ["Calm and sunny", "Hot and lively", "Cool and reflective", "Mild and perfect for exploration"] },
+            { text: "Do you prefer structure or spontaneity?", choices: ["Structure", "Spontaneity", "A bit of both", "Depends on the situation"] },
+            { text: "How do you feel about risks?", choices: ["I avoid them", "I embrace them", "I think before taking them", "I dive in without a second thought"] },
+            { text: "Which activity sounds most fun?", choices: ["Reading a book", "Running a marathon", "Meditating", "Going on a spontaneous trip"] },
+            { text: "How do you prefer to communicate?", choices: ["In person", "Over the phone", "Through writing", "In a group setting"] },
+            { text: "Do you like to be in control?", choices: ["Yes, I like to plan things out", "Sometimes, but I like surprises", "Not really, I go with the flow", "I love taking charge"] },
+            { text: "What’s your idea of a perfect day?", choices: ["Peaceful and quiet", "Exciting and filled with energy", "Thoughtful and introspective", "Unexpected and adventurous"] },
+            { text: "Do you tend to take the lead?", choices: ["Yes, I enjoy leading", "I prefer to follow", "I take charge when needed", "I lead when I feel inspired"] },
+            { text: "How would you describe your energy?", choices: ["Balanced", "High and vibrant", "Low and reflective", "Unpredictable"] },
+            { text: "How do you feel about routines?", choices: ["Comfortable", "Boring", "Necessary", "Fun and spontaneous"] }
+        ];
+
+const results = {
+    calm: ["You are a Calm person 🌿", "You enjoy peace and tranquility. You handle stress gracefully and prefer structure in your life."],
+    energetic: ["You are an Energetic person ⚡", "You are always on the move, embracing life's excitement and challenges with enthusiasm."],
+    introspective: ["You are an Introspective person 🧘", "You enjoy deep thought and reflection. You seek meaningful connections and moments of solitude."],
+    adventurous: ["You are an Adventurous person 🌍", "You thrive on exploration and enjoy seeking out new experiences wherever you go."],
+    creative: ["You are a Creative person 🎨", "You have a vivid imagination and love to think outside the box. Your creativity knows no bounds."],
+    logical: ["You are a Logical person 🧠", "You approach challenges with a clear, methodical mind and enjoy problem-solving."],
+    empathetic: ["You are an Empathetic person 💖", "You have a deep understanding of others' feelings and always try to help in times of need."],
+    optimistic: ["You are an Optimistic person 🌞", "You always look for the positive side of things and inspire others to do the same."],
+    spontaneous: ["You are a Spontaneous person 💥", "You live for the moment, and your decisions are often driven by impulse and excitement."],
+    practical: ["You are a Practical person 🔨", "You prefer straightforward solutions and enjoy making things work in a simple and efficient way."],
+    ambitious: ["You are an Ambitious person 🚀", "You are driven and always have big goals. Success is something you actively work towards every day."],
+    patient: ["You are a Patient person 🕰", "You are calm in the face of adversity and can wait for the right moment, knowing that good things take time."],
+    confident: ["You are a Confident person 💪", "You trust in your abilities and approach life with a sense of self-assurance."],
+    quirky: ["You are a Quirky person 🤪", "You have your unique ways of thinking and behaving, and you love to stand out from the crowd."],
+    nurturing: ["You are a Nurturing person 🌱", "You love to take care of others, providing support and encouragement to those in need."],
+    disciplined: ["You are a Disciplined person 📅", "You keep a steady routine and hold yourself accountable to your goals and responsibilities."],
+    curious: ["You are a Curious person 🔍", "You have an insatiable curiosity about the world and love to ask questions and learn new things."],
+    humorous: ["You are a Humorous person 😂", "You have a great sense of humor and know how to lighten the mood in any situation."],
+    reserved: ["You are a Reserved person 🤫", "You prefer to keep to yourself and enjoy moments of solitude, reflecting deeply on life."],
+    loyal: ["You are a Loyal person 🤝", "You value strong, trusting relationships and always stand by those who are close to you."],
+    methodical: ["You are a Methodical person 🔬", "You like to approach things in a step-by-step, systematic manner, making sure every detail is accounted for."],
+    adventurousSpirit: ["You are an Adventurous Spirit 🏞", "You crave new experiences and challenges, always ready for the next great adventure in life."],
+    idealistic: ["You are an Idealistic person 🌟", "You believe in a better world and always look for ways to improve and make life more fulfilling."],
+    rebellious: ["You are a Rebellious person 🚨", "You challenge the norms and aren't afraid to break the rules if it means standing up for what you believe in."]
+}
+
+        function startQuiz() {
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("quiz-container").style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            let questionHTML = `<h2>${question.text}</h2>`;
+            question.choices.forEach((choice, index) => {
+                questionHTML += `<button class="btn-choice" onclick="answerQuestion('${choice}')">${choice}</button>`;
+            });
+
+            document.getElementById("question-container").innerHTML = questionHTML;
+            updateProgress();
+        }
+
+        function answerQuestion(choice) {
+            if (choice === "Relaxing at home" || choice === "Peaceful beach" || choice === "Stay calm and collected" || choice === "Calm") {
+                score.calm++;
+            } else if (choice === "Exploring the outdoors" || choice === "Action-packed adventure" || choice === "Energized and push through" || choice === "Energetic") {
+                score.energetic++;
+            } else if (choice === "Thinking deeply" || choice === "Quiet retreat" || choice === "Reflect quietly" || choice === "Introspective") {
+                score.introspective++;
+            } else if (choice === "Trying new activities" || choice === "City full of things to discover" || choice === "Take risks to overcome" || choice === "Adventurous") {
+                score.adventurous++;
+            }
+
+            currentQuestion++;
+            if (currentQuestion < totalQuestions) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+        }
+
+        function showResult() {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result").style.display = "block";
+
+            let highestScore = Math.max(score.calm, score.energetic, score.introspective, score.adventurous);
+            let resultType = "";
+
+            if (highestScore === score.calm) {
+                resultType = "calm";
+            } else if (highestScore === score.energetic) {
+                resultType = "energetic";
+            } else if (highestScore === score.introspective) {
+                resultType = "introspective";
+            } else {
+                resultType = "adventurous";
+            }
+
+            document.getElementById("result-text").innerHTML = `${results[resultType][0]}<br>${results[resultType][1]}`;
+            document.getElementById("start-over").style.display = "inline-block";
+            document.getElementById("share-btn").style.display = "inline-block";
+        }
+
+        function shareResult() {
+            alert("Share your result on social media!");
+        }
+
+        function startOver() {
+            score = { calm: 0, energetic: 0, introspective: 0, adventurous: 0 };
+            currentQuestion = 0;
+            document.getElementById("result").style.display = "none";
+            document.getElementById("start-btn").style.display = "inline-block";
+        }
+
+        function goBack() {
+            currentQuestion--;
+            showQuestion();
+        }
+    </script>
+</body>
+</html>
